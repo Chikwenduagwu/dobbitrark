@@ -1,2 +1,0 @@
-python-telegram-bot==13.17
-requests>=2.28.0
