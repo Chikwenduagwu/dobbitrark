@@ -14,6 +14,12 @@
     --radius:12px;
     --maxw:1100px;
     --orange-contrast:#2b0400;
+    --good:#27c281;
+      --bad:#ff4d4f;
+      --accent:#ff7a18; /* orange */
+      --accent-2:#ff9b40;
+      --ring:rgba(255,122,24,0.35);
+      --glow:#ff7a1820;
   }
   *{box-sizing:border-box}
   body{
@@ -26,6 +32,105 @@
     justify-content:center;
     padding:28px;
   }
+    /*body animation*/
+     /* Animated Background Effects */
+    .bg-effects {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .moving-bg-image {
+      position: relative;
+      width: 60%;
+      height: 69%;
+      top: -10%;
+      left: -10%;
+      background-image: url('images/sentient.png');
+      background-size: 200px 200px;
+      background-position: center;
+      opacity: 0.6;
+      animation: moveCircuit 30s linear infinite;
+    }
+
+    @keyframes moveCircuit {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(-50px, -30px) rotate(90deg); }
+      50% { transform: translate(-100px, -60px) rotate(180deg); }
+      75% { transform: translate(-50px, -90px) rotate(270deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+
+    .light-beam {
+      position: absolute;
+      width: 2px;
+      height: 200px;
+      background: linear-gradient(180deg, transparent, var(--accent), transparent);
+      border-radius: 2px;
+      opacity: 0;
+      animation: lightBeam 8s infinite linear;
+      box-shadow: 0 0 20px var(--glow);
+    }
+    .light-beam:nth-child(1) { left: 10%; animation-delay: 0s; }
+    .light-beam:nth-child(2) { left: 25%; animation-delay: 2s; height: 150px; }
+    .light-beam:nth-child(3) { left: 40%; animation-delay: 4s; height: 180px; }
+    .light-beam:nth-child(4) { left: 65%; animation-delay: 6s; height: 120px; }
+    .light-beam:nth-child(5) { left: 80%; animation-delay: 1s; height: 160px; }
+    .light-beam:nth-child(6) { left: 90%; animation-delay: 3s; height: 140px; }
+
+    @keyframes lightBeam {
+      0% { transform: translateY(-100vh); opacity: 0; }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.8; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+
+    .floating-particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: 0;
+      animation: floatParticle 12s infinite linear;
+      box-shadow: 0 0 10px var(--glow);
+    }
+    .floating-particle:nth-child(7) { left: 20%; animation-delay: 0s; }
+    .floating-particle:nth-child(8) { left: 50%; animation-delay: 4s; }
+    .floating-particle:nth-child(9) { left: 70%; animation-delay: 8s; }
+
+    @keyframes floatParticle {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+    }
+
+    .pulse-ring {
+      position: absolute;
+      top: 20%;
+      right: 10%;
+      width: 100px;
+      height: 100px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      opacity: 0;
+      animation: pulseRing 6s infinite ease-in-out;
+    }
+    .pulse-ring:nth-child(10) { animation-delay: 0s; }
+    .pulse-ring:nth-child(11) { animation-delay: 2s; top: 60%; left: 5%; }
+
+    @keyframes pulseRing {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 0.6; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+    
   .wrap{
     width:100%;
     max-width:var(--maxw);
@@ -37,6 +142,7 @@
     grid-template-columns: 420px 1fr;
     gap:18px;
   }
+
 
   header{
     grid-column:1/ -1;
@@ -145,37 +251,61 @@
     border-radius:8px;
   }
 
-  footer { grid-column: 1 / -1; text-align:center; margin-top:10px; color:var(--muted); font-size:13px }
+  footer { grid-column: 1 / -1; text-align:center; margin-top:10px; color:var(--accent); font-size:13px }
 
   /* responsive */
   @media(max-width:980px){
     .wrap{grid-template-columns:1fr; padding:12px}
     .left, .right{order:unset}
   }
-
+    h1 {
+        color: darkorange;
+    }
+    a {
+        color: darkorange;
+        text-decoration: none;
+    }
 </style>
 </head>
 <body>
+    <!--add background effects-->
+     <div class="bg-effects">
+    <div class="moving-bg-image"></div>
+    <div class="grid-overlay"></div>
+    <div class="light-beam"></div>
+    <div class="light-beam"></div>
+    <div class="light-beam"></div>
+    <div class="light-beam"></div>
+    <div class="light-beam"></div>
+    <div class="light-beam"></div>
+    <div class="floating-particle"></div>
+    <div class="floating-particle"></div>
+    <div class="floating-particle"></div>
+    <div class="pulse-ring"></div>
+    <div class="pulse-ring"></div>
+  </div>
+    <!--end animaation-->
   <div class="wrap" role="main">
     <header>
       <div>
+          <img src="images/dob.png"  width="70px" height="70px">
         <h1>Dobby Resume Builder</h1>
-        <div class="subtitle">Generate, polish and tailor resumes — Dobby explains & rewrites.</div>
+        <div class="subtitle">Generate:Dobby explains & rewrites.</div>
       </div>
       <div style="text-align:right">
-        <div style="font-size:12px;color:#666">Model:</div>
-        <div style="font-weight:700;">accounts/sentientfoundation/models/dobby-unhinged-llama-3-3-70b-new</div>
+        <div style="font-size:12px;color:#666">Developer:</div>
+        <div style="font-weight:700;"><p class="copyright">© Built by <a href="https//x.com/agwuchikwendu">WISDOMTECH</a></div>
       </div>
     </header>
 
     <div class="left">
       <div class="section">
         <label>Full name</label>
-        <input id="name" type="text" placeholder="Jane Doe">
+        <input id="name" type="text" placeholder="Wisdom">
         <div class="row">
           <div>
             <label>Email</label>
-            <input id="email" type="email" placeholder="jane@domain.com">
+            <input id="email" type="email" placeholder="wisdom@domain.com">
           </div>
           <div>
             <label>Phone</label>
@@ -195,10 +325,12 @@
         <input id="skills" type="text" placeholder="JavaScript, React, Node.js, Postgres">
 
         <label>Education (short)</label>
-        <input id="education" type="text" placeholder="BSc Computer Science — University of Lagos (2018)">
+        <input id="education" type="text" placeholder="BSc Computer Science — University of Lagos (2025)">
 
         <label>Experience (paste bullets — one per line)</label>
-        <textarea id="experience" placeholder="- Built high-performance API\n- Led team"></textarea>
+        <textarea id="experience" placeholder="- Lead developer for ecommerce platform at WisdomTech
+                                               - Built CI/CD pipelines and microservices
+- Improved API response times by 45%"></textarea>
       </div>
 
       <div class="section">
@@ -214,17 +346,18 @@
         </select>
 
         <div class="controls">
-          <button class="btn" id="genDraft">Generate Draft</button>
+         <button class="btn" id="genDraft">Generate Draft</button>
           <button class="btn secondary" id="polishBtn">Polish</button>
           <button class="btn secondary" id="atsBtn">ATS-Optimize</button>
-          <button class="btn secondary" id="tailorBtn">Tailor to Job</button>
+          <button class="btn secondary" id="tailorBtn">Proceed to generate resume</button>
         </div>
 
-        <div class="note">Workflow: generate → polish → ATS optimize → tailor. Use each to refine result.</div>
+       <div class="note">Workflow: generate → polish → ATS optimize → tailor. Use each to refine result.</div>
+           
       </div>
 
       <div>
-        <div class="warn">Security: API key is kept server-side (Vercel env variable). Frontend does NOT include any secret.</div>
+        <div class="warn">Fill details before clicking the proceed button.</div>
       </div>
     </div>
 
@@ -238,10 +371,10 @@
 
         <div id="output" aria-live="polite"></div>
 
-        <div class="editor">
+       <!-- <div class="editor">
           <label style="font-weight:600;margin-bottom:6px">Edit result (live)</label>
           <textarea id="manualEdit" style="width:100%;min-height:120px;padding:10px;border-radius:8px;border:1px solid #eee"></textarea>
-        </div>
+        </div>-->
 
         <div class="export-row">
           <button class="btn" id="exportTxt">Download .txt</button>
@@ -260,13 +393,11 @@
       </div>
     </div>
 
-    <footer>Tip: deploy on Vercel and add <code>FIREWORKS_API_KEY</code> in Environment Variables.</footer>
+    <footer>Tip: Check details properly before clicking proceed <code>Fill correct details</code> in the input sections.</footer>
   </div>
 
 <script>
-/* Frontend-only code — talks to serverless proxy /api/dobby (Vercel).
-   Model: accounts/sentientfoundation/models/dobby-unhinged-llama-3-3-70b-new
-*/
+
 
 const MODEL = "accounts/sentientfoundation/models/dobby-unhinged-llama-3-3-70b-new";
 const API_PROXY = "/api/dobby"; // serverless proxy on same origin
@@ -503,15 +634,15 @@ exportTxt.addEventListener("click", ()=>{
 
 // quick demo prefill
 function demoPopulate(){
-  nameEl.value = "Aisha Musa";
-  emailEl.value = "aisha@talent.example";
-  phoneEl.value = "+234 80 0000 0000";
-  locationEl.value = "Lagos, Nigeria";
-  titleEl.value = "Full-stack Software Engineer";
-  skillsEl.value = "JavaScript, React, Node.js, PostgreSQL, Docker";
-  educationEl.value = "BSc Computer Engineering — University of Lagos (2019)";
-  experienceEl.value = "- Lead developer for ecommerce platform at WisdomTech\n- Built CI/CD pipelines and microservices\n- Improved API response times by 45%";
-  targetEl.value = "Senior Full-stack Engineer at fintech startup";
+  nameEl.value = "";
+  emailEl.value = "";
+  phoneEl.value = "";
+  locationEl.value = "";
+  titleEl.value = "";
+  skillsEl.value = "";
+  educationEl.value = "";
+  experienceEl.value = "";
+  targetEl.value = "";
 }
 
 (function init(){
