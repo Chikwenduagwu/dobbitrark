@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dobby Resume Builder — Secure Proxy</title>
+<style>
+  :root{
+    --accent:#ff7a18;
+    --bg:#ffffff;
+    --muted:#666;
+    --card:#fafafa;
+    --glass: rgba(0,0,0,0.04);
+    --radius:12px;
+    --maxw:1100px;
+    --orange-contrast:#2b0400;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg,#f7f7f8,#eef2f6);
+    color:#111;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:28px;
+  }
+  .wrap{
+    width:100%;
+    max-width:var(--maxw);
+    background:var(--bg);
+    border-radius:var(--radius);
+    box-shadow:0 10px 30px rgba(20,20,30,0.08);
+    padding:20px;
+    display:grid;
+    grid-template-columns: 420px 1fr;
+    gap:18px;
+  }
+
+  header{
+    grid-column:1/ -1;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:2px;
+  }
+  h1{margin:0;font-size:18px}
+  .subtitle{color:var(--muted);font-size:13px}
+
+  .left {
+    background:linear-gradient(180deg,#fff,#fbfbfb);
+    border-radius:10px;
+    padding:14px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+
+  label{display:block;font-size:13px;margin-top:10px;color:#333}
+  input[type="text"], input[type="email"], textarea, select {
+    width:100%;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid #e6e9ee;
+    margin-top:6px;
+    font-size:14px;
+    background:#fff;
+  }
+  textarea{min-height:80px;resize:vertical}
+
+  .small{font-size:12px;color:var(--muted);margin-top:6px}
+
+  .row{display:flex;gap:8px}
+  .row > *{flex:1}
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    box-shadow:0 6px 18px rgba(255,122,24,0.14);
+  }
+  .btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(255,122,24,0.12);box-shadow:none}
+  .btn:disabled{opacity:.6;cursor:default}
+
+  .left .section{margin-bottom:12px;padding-bottom:6px;border-bottom:1px dashed #eee}
+
+  .right{
+    padding:14px;
+    border-radius:10px;
+    min-height:520px;
+    background:linear-gradient(180deg,#ffffff,#fbfbfb);
+  }
+  .panel{
+    background:var(--card);
+    padding:12px;
+    border-radius:10px;
+    height:100%;
+    overflow:auto;
+  }
+
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .note{font-size:12px;color:var(--muted);margin-top:6px}
+
+  #output{
+    min-height:420px;
+    line-height:1.45;
+    font-size:15px;
+    color:#111;
+    padding:10px;
+    white-space:pre-wrap;
+    overflow:auto;
+  }
+  .meta{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-bottom:8px;
+  }
+  .chip{
+    background:var(--glass);
+    padding:6px 8px;
+    border-radius:999px;
+    font-size:13px;
+    color:var(--muted);
+  }
+
+  .editor{
+    margin-top:12px;
+  }
+  .export-row{display:flex;gap:8px;align-items:center;margin-top:12px}
+
+  .warn{
+    font-size:12px;
+    color:#b45309;
+    background:#fff7ed;
+    padding:8px;
+    border-radius:8px;
+  }
+
+  footer { grid-column: 1 / -1; text-align:center; margin-top:10px; color:var(--muted); font-size:13px }
+
+  /* responsive */
+  @media(max-width:980px){
+    .wrap{grid-template-columns:1fr; padding:12px}
+    .left, .right{order:unset}
+  }
+
+</style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <header>
+      <div>
+        <h1>Dobby Resume Builder</h1>
+        <div class="subtitle">Generate, polish and tailor resumes — Dobby explains & rewrites.</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:12px;color:#666">Model:</div>
+        <div style="font-weight:700;">accounts/sentientfoundation/models/dobby-unhinged-llama-3-3-70b-new</div>
+      </div>
+    </header>
+
+    <div class="left">
+      <div class="section">
+        <label>Full name</label>
+        <input id="name" type="text" placeholder="Jane Doe">
+        <div class="row">
+          <div>
+            <label>Email</label>
+            <input id="email" type="email" placeholder="jane@domain.com">
+          </div>
+          <div>
+            <label>Phone</label>
+            <input id="phone" type="text" placeholder="+234 ...">
+          </div>
+        </div>
+
+        <label>Location</label>
+        <input id="location" type="text" placeholder="Lagos, Nigeria">
+
+        <label>Professional Title</label>
+        <input id="title" type="text" placeholder="Senior Software Engineer">
+      </div>
+
+      <div class="section">
+        <label>Skills (comma separated)</label>
+        <input id="skills" type="text" placeholder="JavaScript, React, Node.js, Postgres">
+
+        <label>Education (short)</label>
+        <input id="education" type="text" placeholder="BSc Computer Science — University of Lagos (2018)">
+
+        <label>Experience (paste bullets — one per line)</label>
+        <textarea id="experience" placeholder="- Built high-performance API\n- Led team"></textarea>
+      </div>
+
+      <div class="section">
+        <label>Target job / tailor for (optional)</label>
+        <input id="target" type="text" placeholder="Backend Engineer at fintech startup">
+
+        <label>Tone</label>
+        <select id="tone">
+          <option value="professional">Professional</option>
+          <option value="concise">Concise</option>
+          <option value="friendly">Friendly</option>
+          <option value="executive">Executive / Leadership</option>
+        </select>
+
+        <div class="controls">
+          <button class="btn" id="genDraft">Generate Draft</button>
+          <button class="btn secondary" id="polishBtn">Polish</button>
+          <button class="btn secondary" id="atsBtn">ATS-Optimize</button>
+          <button class="btn secondary" id="tailorBtn">Tailor to Job</button>
+        </div>
+
+        <div class="note">Workflow: generate → polish → ATS optimize → tailor. Use each to refine result.</div>
+      </div>
+
+      <div>
+        <div class="warn">Security: API key is kept server-side (Vercel env variable). Frontend does NOT include any secret.</div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="panel">
+        <div class="meta">
+          <div class="chip">Stage: <span id="stage">idle</span></div>
+          <div class="chip">Tone: <span id="chipTone">professional</span></div>
+          <div class="chip">Typing: <span id="typingSpeed">30 cps</span></div>
+        </div>
+
+        <div id="output" aria-live="polite"></div>
+
+        <div class="editor">
+          <label style="font-weight:600;margin-bottom:6px">Edit result (live)</label>
+          <textarea id="manualEdit" style="width:100%;min-height:120px;padding:10px;border-radius:8px;border:1px solid #eee"></textarea>
+        </div>
+
+        <div class="export-row">
+          <button class="btn" id="exportTxt">Download .txt</button>
+          <button class="btn secondary" id="copyBtn">Copy to clipboard</button>
+          <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+            <label class="small" style="margin:0">Typing speed</label>
+            <select id="speed">
+              <option value="20">20 cps</option>
+              <option value="30" selected>30 cps</option>
+              <option value="60">60 cps</option>
+              <option value="120">120 cps</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer>Tip: deploy on Vercel and add <code>FIREWORKS_API_KEY</code> in Environment Variables.</footer>
+  </div>
+
+<script>
+/* Frontend-only code — talks to serverless proxy /api/dobby (Vercel).
+   Model: accounts/sentientfoundation/models/dobby-unhinged-llama-3-3-70b-new
+*/
+
+const MODEL = "accounts/sentientfoundation/models/dobby-unhinged-llama-3-3-70b-new";
+const API_PROXY = "/api/dobby"; // serverless proxy on same origin
+
+// Elements
+const nameEl = document.getElementById("name");
+const emailEl = document.getElementById("email");
+const phoneEl = document.getElementById("phone");
+const locationEl = document.getElementById("location");
+const titleEl = document.getElementById("title");
+const skillsEl = document.getElementById("skills");
+const educationEl = document.getElementById("education");
+const experienceEl = document.getElementById("experience");
+const targetEl = document.getElementById("target");
+const toneEl = document.getElementById("tone");
+
+const genDraftBtn = document.getElementById("genDraft");
+const polishBtn = document.getElementById("polishBtn");
+const atsBtn = document.getElementById("atsBtn");
+const tailorBtn = document.getElementById("tailorBtn");
+
+const outputEl = document.getElementById("output");
+const stageEl = document.getElementById("stage");
+const chipTone = document.getElementById("chipTone");
+const typingSpeedEl = document.getElementById("typingSpeed");
+const manualEdit = document.getElementById("manualEdit");
+const exportTxt = document.getElementById("exportTxt");
+const copyBtn = document.getElementById("copyBtn");
+const speedSel = document.getElementById("speed");
+
+let lastResponseText = "";
+let typingInterval = null;
+let typingSpeed = 30; // chars per second
+
+speedSel.addEventListener("change", ()=> {
+  typingSpeed = parseInt(speedSel.value,10);
+  typingSpeedEl.textContent = `${typingSpeed} cps`;
+});
+
+// Build the natural language prompt for the requested action
+function buildPrompt(action){
+  const name = nameEl.value.trim() || "John Doe";
+  const email = emailEl.value.trim() || "";
+  const phone = phoneEl.value.trim() || "";
+  const location = locationEl.value.trim() || "";
+  const profTitle = titleEl.value.trim() || "Professional";
+  const skills = skillsEl.value.trim() || "";
+  const education = educationEl.value.trim() || "";
+  const experience = experienceEl.value.trim() || "";
+  const target = targetEl.value.trim();
+  const tone = toneEl.value;
+
+  let persona = `You are Dobby, a careful professional assistant that rewrites and formats resumes in clear, ATS-friendly English. Use a ${tone} tone. Provide markdown-style bold headings (e.g., **Work Experience**).`;
+
+  let base = `${persona}
+
+User details:
+Name: ${name}
+Title: ${profTitle}
+Location: ${location}
+Email: ${email}
+Phone: ${phone}
+
+Skills: ${skills}
+
+Education: ${education}
+
+Experience (raw lines):
+${experience}
+
+Action: ${action}.
+Instructions:
+- Produce a resume draft for ${name}.
+- Use clear sections: **Professional Summary**, **Work Experience**, **Education**, **Skills**.
+- Use bullet points for achievements; be concise.
+- If tailoring, emphasize relevant skills and keywords for the target role.
+- Make text ATS-friendly: simple formatting, no unusual characters.
+- Provide the resume in plain text with Markdown-style bold headings.
+- Keep it professional and helpful.
+`;
+
+  if(target && (action === "Tailor to job" || action === "Generate Draft")){
+    base += `\nTarget job: ${target}\nFocus on keywords relevant to: ${target}\n`;
+  }
+
+  if(action === "Polish"){
+    base = `${persona}\nPolish and improve the following resume to be clearer and more professional. Keep headings bold.\n\nResume:\n${manualEdit.value || lastResponseText}`;
+  }
+  if(action === "ATS-Optimize"){
+    base = `${persona}\nMake the following resume more ATS-friendly: ensure keywords, simple formatting and remove decorative characters.\n\nResume:\n${manualEdit.value || lastResponseText}`;
+  }
+
+  return base;
+}
+
+// call proxy which forwards to Fireworks/Dobby
+async function callDobby(prompt, opts = {}){
+  stageEl.textContent = "thinking";
+  try {
+    const body = {
+      model: MODEL,
+      messages: [
+        {role:"system", content: "You are Dobby, a helpful assistant that writes resumes."},
+        {role:"user", content: prompt}
+      ],
+      max_tokens: opts.max_tokens || 900,
+      temperature: opts.temperature ?? 0.7
+    };
+
+    const r = await fetch(API_PROXY, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(body)
+    });
+
+    if(!r.ok){
+      const txt = await r.text();
+      stageEl.textContent = "error";
+      throw new Error(`Proxy error ${r.status}: ${txt}`);
+    }
+
+    const data = await r.json();
+    let text = "";
+    // Fireworks-style chat reply
+    if (data.choices && data.choices[0] && data.choices[0].message) {
+      text = data.choices[0].message.content || "";
+    } else if (data.output && Array.isArray(data.output)) {
+      text = data.output.map(o => o.content || "").join("\n");
+    } else {
+      text = JSON.stringify(data);
+    }
+    stageEl.textContent = "received";
+    return text;
+  } catch (err){
+    console.error(err);
+    stageEl.textContent = "error";
+    return `Error: ${err.message}`;
+  }
+}
+
+// Markdown -> safe HTML (simple)
+function parseMarkdownToHTML(md){
+  if(!md) return "";
+  const esc = (s)=>s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+  let out = esc(md);
+  out = out.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  out = out.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  out = out.replace(/(^|\n)[ \t]*[-*][ \t]+/g, '$1• ');
+  out = out.replace(/\n/g, '<br>');
+  return out;
+}
+
+// typing animation for Dobby responses
+function typeOut(rawText){
+  clearInterval(typingInterval);
+  outputEl.innerHTML = "";
+  manualEdit.value = "";
+  lastResponseText = rawText;
+  const cps = typingSpeed;
+  let idx = 0;
+  stageEl.textContent = "writing";
+  return new Promise((resolve) => {
+    typingInterval = setInterval(()=>{
+      idx += Math.max(1, Math.floor(cps/10));
+      if(idx >= rawText.length) idx = rawText.length;
+      const slice = rawText.slice(0, idx);
+      outputEl.innerHTML = parseMarkdownToHTML(slice);
+      if(idx === rawText.length){
+        clearInterval(typingInterval);
+        stageEl.textContent = "done";
+        manualEdit.value = rawText;
+        resolve();
+      }
+    }, 100);
+  });
+}
+
+// high-level action handler
+async function handleAction(action){
+  chipTone.textContent = toneEl.value;
+  stageEl.textContent = action;
+  const prompt = buildPrompt(action === "Generate Draft" ? "Generate Draft" : (action === "Polish" ? "Polish" : (action === "ATS-Optimize" ? "ATS-Optimize" : "Tailor to job")));
+  setButtonsDisabled(true);
+  const result = await callDobby(prompt, {max_tokens: 900});
+  if(result === null){
+    setButtonsDisabled(false);
+    return;
+  }
+  await typeOut(result);
+  setButtonsDisabled(false);
+}
+
+function setButtonsDisabled(dis){
+  genDraftBtn.disabled = dis;
+  polishBtn.disabled = dis;
+  atsBtn.disabled = dis;
+  tailorBtn.disabled = dis;
+}
+
+genDraftBtn.addEventListener("click", ()=> handleAction("Generate Draft"));
+polishBtn.addEventListener("click", ()=> handleAction("Polish"));
+atsBtn.addEventListener("click", ()=> handleAction("ATS-Optimize"));
+tailorBtn.addEventListener("click", ()=> handleAction("Tailor to Job"));
+
+manualEdit.addEventListener("input", ()=>{
+  lastResponseText = manualEdit.value;
+  outputEl.innerHTML = parseMarkdownToHTML(manualEdit.value);
+});
+
+copyBtn.addEventListener("click", async ()=>{
+  const text = manualEdit.value || lastResponseText || "";
+  try {
+    await navigator.clipboard.writeText(text);
+    copyBtn.textContent = "Copied!";
+    setTimeout(()=> copyBtn.textContent = "Copy to clipboard", 1500);
+  } catch(e){
+    alert("Copy failed: " + e.message);
+  }
+});
+
+exportTxt.addEventListener("click", ()=>{
+  const text = manualEdit.value || lastResponseText || "";
+  const name = (nameEl.value.trim() || "resume").replace(/\s+/g, "_");
+  const blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${name}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+// quick demo prefill
+function demoPopulate(){
+  nameEl.value = "Aisha Musa";
+  emailEl.value = "aisha@talent.example";
+  phoneEl.value = "+234 80 0000 0000";
+  locationEl.value = "Lagos, Nigeria";
+  titleEl.value = "Full-stack Software Engineer";
+  skillsEl.value = "JavaScript, React, Node.js, PostgreSQL, Docker";
+  educationEl.value = "BSc Computer Engineering — University of Lagos (2019)";
+  experienceEl.value = "- Lead developer for ecommerce platform at WisdomTech\n- Built CI/CD pipelines and microservices\n- Improved API response times by 45%";
+  targetEl.value = "Senior Full-stack Engineer at fintech startup";
+}
+
+(function init(){
+  typingSpeedEl.textContent = `${typingSpeed} cps`;
+  chipTone.textContent = toneEl.value;
+  stageEl.textContent = "idle";
+  demoPopulate();
+})();
+</script>
+</body>
+</html>
