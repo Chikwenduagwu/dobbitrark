@@ -77,6 +77,3 @@ Instead of juggling 10 tabs for resume templates, job tailoring, and ATS checks 
 
 MIT © 2025 — Built with 💛 and **Wisdom**
 
-
-
-👉 Would you like me to also add a **fancy project logo/banner** (ASCII style or SVG) at the top of the README?
