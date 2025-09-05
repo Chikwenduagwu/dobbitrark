@@ -1,5 +1,5 @@
 // api/dobby.js
-// Vercel Serverless function (ES module). For Netlify use a slightly different signature.
+
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
