@@ -387,9 +387,6 @@
   </div>
 
 <script>
-/* Frontend-only code — talks to serverless proxy /api/dobby (Vercel).
-   Model: accounts/sentientfoundation/models/dobby-unhinged-llama-3-3-70b-new
-*/
 
 const MODEL = "accounts/sentientfoundation/models/dobby-unhinged-llama-3-3-70b-new";
 const API_PROXY = "/api/dobby"; // serverless proxy on same origin
@@ -624,7 +621,7 @@ exportTxt.addEventListener("click", ()=>{
   URL.revokeObjectURL(url);
 });
 
-// quick demo prefill
+// quick demo prefill...
 function demoPopulate(){
   nameEl.value = "";
   emailEl.value = "";
